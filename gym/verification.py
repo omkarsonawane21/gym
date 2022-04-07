@@ -8,17 +8,22 @@ mycursor = mydb.cursor()
 
 class Verify(object):
     def __init__(self):
-        self._cached_stamp = 0
+        self.trainer_cached_stamp = 0
+        self.owner_cached_stamp = 0
         self.trainer_file = 'logs/trainer.log'
         self.owner_file = 'logs/owner.log'
 
     def verify_trainer(self):
-        stamp = os.stat(self.trainer_file).st_mtime
-        if stamp != self._cached_stamp:
-            self._cached_stamp = stamp
-    #     if file is changed , i.e new trainer has been added, verify it
+        get_unverifiedtrainer = "select trainerid from trainer where verified = 0"
 
     def verify_owner(self):
         stamp = os.stat(self.owner_file).st_mtime
         if stamp != self._cached_stamp:
             self._cached_stamp = stamp
+            print("yes")
+
+
+v = Verify()
+v.verify_trainer()
+v.verify_owner()
+v.write()

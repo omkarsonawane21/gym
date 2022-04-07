@@ -2,12 +2,11 @@ import mysql.connector      # database connected
 mydb = mysql.connector.connect(user='root', host='127.0.0.1', port=3306, password='#Sonawane@21', database='gymdb')
 mycursor = mydb.cursor()    # use of cursor for execution
 
-mycursor.execute("select * from login")
-x = mycursor.fetchall()
-print(x)
-
+mycursor.execute("SELECT gymid from gym")
+myresult = mycursor.fetchall()
+last_gymid_entry = myresult[len(myresult) - 1][0]
+print(type(last_gymid_entry))
 '''
-
 # admin
 mycursor.execute("CREATE TABLE admin(name VARCHAR(20) primary key, password VARCHAR(15) not null, "
                  "role VARCHAR(15))")
@@ -48,9 +47,9 @@ mycursor.execute("create table gym(gymid int unsigned primary key auto_increment
 
 # login - set id appropriately on basis of who is registering i.e trainer, owner or user
 # while signing in for first time ask for trainer, owner or user
-mycursor.execute("create table login(uname varchar(10) unique not null, password varchar(15) not null, "
-                 "loginid int unsigned primary key, name varchar(30) not null, mobile varchar(11) "
-                 "unique not null, email varchar(30) unique not null, aadhar varchar(13) unique not "
+mycursor.execute("create table login(uname varchar(15) unique not null, password varchar(15) not null, "
+                 "loginid int unsigned primary key, name varchar(30) not null, mobile varchar(12) "
+                 "unique not null, email varchar(30) unique not null, aadhar varchar(15) unique not "
                  "null, profile varchar(100), gymid int unsigned, foreign key(gymid) references gym(gymid))")
 
 # server - stores ip address of each individual id of all along with active status of that id
@@ -59,6 +58,7 @@ mycursor.execute("CREATE TABLE server(serverid int unsigned PRIMARY KEY, foreign
                  "delete "
                  "cascade , ip VARCHAR(50), status tinyint)")
 
+# trainer
 mycursor.execute("create table trainer(trainerid int unsigned primary key, foreign key(trainerid) references login("
                  "loginid) on delete"
                  " cascade, verified boolean, certificate varchar(100), "
